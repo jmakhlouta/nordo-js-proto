@@ -1,17 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { createNordo } from '../src/index.js';
+import { createOutbox } from '../src/index.js';
 
 describe('NORDO', () => {
-  describe('createNordo', () => {
-    it('should create a NORDO instance', () => {
-      const nordo = createNordo();
-      expect(nordo).toBeDefined();
+  describe('createOutbox', () => {
+    it('should create an outbox instance', () => {
+      const outbox = createOutbox();
+      expect(outbox).toBeDefined();
     });
 
     it('should return an object with a version property', () => {
-      const nordo = createNordo();
-      expect(nordo).toHaveProperty('version');
-      expect(typeof nordo.version).toBe('string');
+      const outbox = createOutbox();
+      expect(outbox).toHaveProperty('version');
+      expect(typeof outbox.version).toBe('string');
     });
   });
 });
