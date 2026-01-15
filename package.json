@@ -1,0 +1,36 @@
+{
+  "name": "nordo-js-proto",
+  "version": "1.0.0",
+  "description": "Endeavors to be a well-factored outbox for streamable change events (sometimes called domain intents). Specifically Not Overly Reliable (or) Durable Outbox—NORDO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "node build.js",
+    "lint": "eslint src"
+  },
+  "keywords": [
+    "outbox",
+    "events",
+    "browser",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "vitest": "^4.0.17"
+  }
+}
