@@ -6,18 +6,18 @@
  */
 
 /**
- * @typedef {Object} NordoInstance
+ * @typedef {Object} Outbox
  * @property {string} version - The version of the NORDO library
  */
 
 /**
- * Creates a new NORDO instance
- * @returns {NordoInstance} A NORDO instance
+ * Creates a new outbox instance
+ * @returns {Outbox} An outbox instance
  * @example
- * const nordo = createNordo();
- * console.log(nordo.version); // "1.0.0"
+ * const outbox = createOutbox();
+ * console.log(outbox.version); // "1.0.0"
  */
-export function createNordo() {
+export function createOutbox() {
   return {
     // Placeholder for future implementation
     version: '1.0.0'
@@ -28,5 +28,5 @@ export function createNordo() {
  * Default export for convenience
  */
 export default {
-  createNordo
+  createOutbox
 };
