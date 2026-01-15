@@ -1,212 +1,84 @@
-# NORDO Architecture & Distribution Decisions
+# Architecture Decision Record
 
-## Modern JavaScript Library Development (2024-2025)
+Log of architectural decisions for NORDO (Not Overly Reliable or Durable Outbox).
 
-### Build Script Decision: **Simple Copy Script is VALID** ✓
+## ADR-001: Use unbundled ES modules (2026-01-15)
 
-The current simple build script that copies ES modules from `src/` to `dist/` is actually **aligned with modern best practices** for a browser-focused, vanilla JavaScript library. Here's why:
+**Decision:** Copy ES modules from `src/` to `dist/` without bundling or transpilation.
 
-## Modern Approaches (2024-2025)
+**Context:** Browser-focused library, prototype phase, vanilla-js ethos.
 
-### 1. No-Build / Unbundled ESM (Our Current Approach)
-**Status: RECOMMENDED for this use case**
+**Rationale:** Modern browsers support ES modules natively. Unbundled approach (Vite dev mode, Snowpack) is standard for browser-native libraries. No transpilation or bundling needed for ES2022 syntax in target environments.
 
-- **What it is:** Serve native ES modules directly to browsers without bundling/transpiling
-- **Modern precedent:** Vite dev mode, Snowpack, Deno, and many modern libraries
-- **Benefits:**
-  - Zero build complexity
-  - Instant dev feedback
-  - Native browser support (all modern browsers support ESM)
-  - Source maps are the actual source
-  - No tooling lock-in
-  - Perfect for "vanilla-js-ethos"
+**Consequences:** Fast dev feedback, zero build complexity, no tooling lock-in. May need bundler later for: older browser support, npm dependencies, or dual-package distribution.
 
-**When to use:**
-- ✅ Browser-only libraries (like NORDO)
-- ✅ Modern ES syntax (ES2020+)
-- ✅ No transpilation needed
-- ✅ Small to medium codebases
-- ✅ Prototype/proof-of-concept phase
+## ADR-002: ESM-only, no CommonJS (2026-01-15)
 
-### 2. Bundler Approach (Rollup, esbuild, Vite)
-**Status: Consider later if needed**
+**Decision:** Distribute as ES modules only, no CommonJS build.
 
-**When you'd need a bundler:**
-- Publishing to npm for use by other projects
-- Supporting older browsers (need transpilation)
-- Dual package hazard (ESM + CommonJS)
-- Minification for production CDN delivery
-- Tree-shaking optimization
-- Multiple entry points
+**Context:** Library targets browser environments exclusively.
+
+**Rationale:** Browsers only understand ESM. CommonJS is Node.js legacy. Modern tools (Vite, webpack 5+, Rollup) consume ESM. Dual packages add complexity without clear need.
+
+**Consequences:** Simple `package.json` exports. May reconsider if server-side usage emerges or users report compatibility issues.
+
+## ADR-003: No TypeScript, use JSDoc (2026-01-15)
+
+**Decision:** Vanilla JavaScript with JSDoc annotations for type hints.
+
+**Context:** Vanilla-js-ethos project, prototype phase.
+
+**Rationale:** JSDoc provides IDE autocomplete and type checking without TypeScript overhead. Aligns with project philosophy. Can migrate to TypeScript later without breaking changes.
+
+**Consequences:** Good IDE support via JSDoc. Type checking optional via `@ts-check`. No `.d.ts` generation yet.
+
+## ADR-004: Defer minification (2026-01-15)
+
+**Decision:** Ship unminified code during prototype phase.
+
+**Context:** Proof-of-concept library, active development.
+
+**Rationale:** Readable source aids debugging. Production optimization premature. CDNs (unpkg, jsdelivr) can auto-minify. Can add esbuild minification when publishing for production use.
+
+**Consequences:** Larger file size, but acceptable for prototype. Will add minification before stable release.
+
+## ADR-005: Target ES2022 syntax (2026-01-15)
+
+**Decision:** Use ES2022 as baseline (`ecmaVersion: 2022` in ESLint).
+
+**Context:** Modern browser library, no legacy browser support required.
+
+**Rationale:** ES2022 broadly supported (Node 16+, all modern browsers). Includes async/await, optional chaining, nullish coalescing, private fields. Newer features (2023+ like array grouping) not needed yet.
+
+**Consequences:** Clean, modern syntax. May need transpilation later if older browser support requested.
+
+## ADR-006: Simple build script over bundler tools (2026-01-15)
+
+**Decision:** Node.js script using `fs.copyFile` instead of Rollup/esbuild/Vite build.
+
+**Context:** No external dependencies, no transpilation, browser-native ESM.
+
+**Rationale:** Build tool would add complexity without benefit. Modern practice favors "bundle only when necessary." Current needs: copy `.js` files from `src/` to `dist/`.
+
+**Consequences:** Zero build tool dependencies. When needs change (transpilation, minification, dual formats), can adopt Rollup or esbuild incrementally.
+
+## Future Considerations
+
+**When to add bundler:**
+- External npm dependencies to bundle
+- Tree-shaking for optimization
+- Minification for production
 - TypeScript compilation
+- Dual package (ESM + CJS) distribution
 
-**Popular options (2024-2025):**
-- **Rollup**: Best for libraries, excellent tree-shaking
-- **esbuild**: Fastest, written in Go, simple config
-- **Vite**: Built on esbuild, best DX, hybrid unbundled dev/bundled prod
-- **SWC/Rspack**: Rust-based, ultra-fast
-
-## Distribution Strategy Decisions
-
-### Current Setup Analysis
-
-```json
-{
-  "type": "module",           // ✓ Correct for ESM-only
-  "main": "./dist/index.js",  // ✓ Points to dist
-  "module": "./dist/index.js",// ✓ (redundant with type:module but harmless)
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"  // ✓ Fallback for tools
-    }
-  }
-}
-```
-
-### Questions & Recommendations
-
-#### 1. **Do we need CommonJS support?**
-**Current answer: NO** ❌
-
-- NORDO is explicitly "for use in the browser"
-- Modern browsers only understand ESM
-- CommonJS is a Node.js legacy format
-- All modern tools (Vite, webpack 5+, Rollup) handle ESM
-
-**When to reconsider:**
-- If publishing to npm for server-side use
-- If users report compatibility issues
-
-**If YES later, you'd need:**
-```json
-{
-  "type": "module",
-  "main": "./dist/cjs/index.cjs",
-  "module": "./dist/esm/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
-    }
-  }
-}
-```
-And a bundler to generate both outputs.
-
-#### 2. **Do we need TypeScript?**
-**Current answer: NO** ❌
-
-- Vanilla-js-ethos suggests avoiding TypeScript
-- Can add JSDoc comments for type hints (IDE support without TS)
-- TypeScript can be added later without breaking changes
-
-**Alternative (TypeScript-like benefits without TypeScript):**
-```javascript
-/**
- * @typedef {Object} NordoInstance
- * @property {string} version
- */
-
-/**
- * Creates a new NORDO instance
- * @returns {NordoInstance}
- */
-```
-
-#### 3. **Do we need minification?**
-**Current answer: NOT YET** ⏳
-
-- During prototype phase, readable code helps debugging
-- Add when publishing for production use
-- Can be done at build time OR by consumers
-
-**Options if YES:**
-- Add esbuild with minify flag (fastest)
-- Use Terser (most configurable)
-- Let CDN handle it (unpkg, jsdelivr do auto-minification)
-
-#### 4. **Do we need a bundler?**
-**Current answer: NO** ❌
-
-Our simple copy script is sufficient because:
-- ✓ No transpilation needed (modern JS only)
-- ✓ No external dependencies to bundle
-- ✓ Browser-native ESM works great
-- ✓ Simpler is better for prototypes
-
-**Add a bundler when:**
-- Need to support older browsers
-- Have npm dependencies to bundle
-- Want to publish multiple formats
-- Need tree-shaking/dead code elimination
-- Want to generate TypeScript definitions
-
-#### 5. **File naming conventions?**
-**Current: `.js` with `"type": "module"`** ✓
-
-**Alternatives:**
-- `.mjs` (explicit ESM, works without `"type": "module"`)
-- `.cjs` (explicit CommonJS)
-
-**Recommendation:** Keep current `.js` approach
-- Cleaner, less file extension complexity
-- Standard for modern ESM packages
-- `"type": "module"` is now widely supported
-
-## Recommended Next Steps
-
-### For Now (Prototype Phase)
-1. ✅ **Keep the simple copy script** - it's perfect for this phase
-2. ✅ **Keep ESM-only** - browser-focused library
-3. ✅ **No bundler needed** - vanilla-js-ethos
-4. Consider: Add JSDoc comments for better IDE support
-
-### When Publishing to npm
-1. Decide: Do users need CommonJS? (Probably not if browser-only)
-2. Consider: Minified build for production CDN use
-3. Consider: Source maps for debugging
-4. Verify: `"files": ["dist"]` only ships what's needed
-
-### If Adding Complexity Later
-**Switch to Rollup if you need:**
-```javascript
-// rollup.config.js
-export default {
-  input: 'src/index.js',
-  output: [
-    { file: 'dist/esm/index.mjs', format: 'es' },
-    { file: 'dist/cjs/index.cjs', format: 'cjs' }
-  ]
-}
-```
-
-**Or use esbuild for speed:**
-```javascript
-// build.js
-import esbuild from 'esbuild';
-
-await esbuild.build({
-  entryPoints: ['src/index.js'],
-  bundle: true,
-  outfile: 'dist/index.js',
-  format: 'esm',
-  minify: true
-});
-```
-
-## Conclusion
-
-**The current simple build script is NOT outdated** - it's actually aligned with modern "unbundled" approaches championed by Vite, Snowpack, and the ESM-native movement. For a browser-focused, vanilla JavaScript prototype library:
-
-- ✅ Simple copy script is appropriate
-- ✅ ESM-only is modern and correct
-- ✅ No bundler needed yet
-- ✅ Can add complexity incrementally when needed
-
-The JavaScript ecosystem in 2024-2025 has moved **away from "always bundle everything"** toward **"bundle only when necessary."** For browser-native ESM libraries, especially prototypes, simpler is often better.
+**Tooling options surveyed:**
+- Vite: Unbundled dev, bundled prod
+- Rollup: Library bundling, tree-shaking
+- esbuild: Speed-focused, Go-based
+- SWC/Rspack: Rust-based alternatives
 
 ## References
-- [Vite Philosophy](https://vitejs.dev/guide/why.html) - Modern unbundled dev
-- [Modern npm packages](https://snyk.io/blog/building-npm-package-compatible-with-esm-and-cjs-2024/)
-- [ESM best practices](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)
+
+- [Vite Philosophy](https://vitejs.dev/guide/why.html) - Unbundled dev approach
+- [Modern npm packages](https://snyk.io/blog/building-npm-package-compatible-with-esm-and-cjs-2024/) - ESM+CJS dual distribution
+- [ESM best practices](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) - Sindre Sorhus guidance

@@ -21,10 +21,11 @@
     "lint": "eslint src"
   },
   "keywords": [
-    "outbox",
-    "events",
-    "browser",
-    "vanilla-js"
+    "outbox-pattern",
+    "transactional-outbox",
+    "domain-events",
+    "event-streaming",
+    "change-data-capture"
   ],
   "author": "",
   "license": "ISC",
