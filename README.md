@@ -2,19 +2,24 @@
 
 Endeavors to be a well-factored outbox for streamable change events (sometimes called domain intents). Specifically Not Overly Reliable (or) Durable Outbox—NORDO
 
-## Project Structure
+## About This Project
 
-This is a modern vanilla JavaScript library designed for browser use, following ES module standards.
+This is a modern vanilla JavaScript library designed for browser use, following ES module standards. It embraces the **vanilla-js-ethos** with a simple, unbundled approach that aligns with 2024-2025 best practices.
+
+📐 **See [ARCHITECTURE.md](./ARCHITECTURE.md)** for detailed information about build decisions, distribution strategy, and when/why to add complexity.
+
+## Project Structure
 
 ```
 nordo-js-proto/
-├── src/           # Source code (ES modules)
-├── test/          # Test files
-├── dist/          # Built output (generated)
-├── package.json   # Project configuration
-├── vitest.config.js    # Test configuration
-├── eslint.config.js    # Linting configuration
-└── build.js       # Build script
+├── src/              # Source code (ES modules)
+├── test/             # Test files
+├── dist/             # Built output (generated)
+├── ARCHITECTURE.md   # Build and distribution decisions
+├── package.json      # Project configuration
+├── vitest.config.js  # Test configuration
+├── eslint.config.js  # Linting configuration
+└── build.js          # Simple build script
 ```
 
 ## Installation
