@@ -51,10 +51,10 @@ npm run lint          # Check code quality
 This is a proof-of-concept library with a stubbed-out API. The actual outbox implementation will have nuanced specifications added later.
 
 ```javascript
-import { createNordo } from 'nordo-js-proto';
+import { createOutbox } from 'nordo-js-proto';
 
-const nordo = createNordo();
-console.log(nordo.version);
+const outbox = createOutbox();
+console.log(outbox.version);
 ```
 
 ## Browser Usage
@@ -63,10 +63,10 @@ Since this targets ES modules for the browser, you can use it directly:
 
 ```html
 <script type="module">
-  import { createNordo } from './dist/index.js';
+  import { createOutbox } from './dist/index.js';
   
-  const nordo = createNordo();
-  console.log('NORDO initialized:', nordo);
+  const outbox = createOutbox();
+  console.log('Outbox initialized:', outbox);
 </script>
 ```
 
