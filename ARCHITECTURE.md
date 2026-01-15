@@ -58,7 +58,7 @@ The current simple build script that copies ES modules from `src/` to `dist/` is
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"  // Note: No .d.ts files yet
+      "default": "./dist/index.js"  // ✓ Fallback for tools
     }
   }
 }
@@ -104,10 +104,13 @@ And a bundler to generate both outputs.
 **Alternative (TypeScript-like benefits without TypeScript):**
 ```javascript
 /**
- * Creates a new NORDO instance
- * @returns {NordoInstance}
  * @typedef {Object} NordoInstance
  * @property {string} version
+ */
+
+/**
+ * Creates a new NORDO instance
+ * @returns {NordoInstance}
  */
 ```
 
