@@ -6,8 +6,16 @@
  */
 
 /**
+ * @typedef {Object} NordoInstance
+ * @property {string} version - The version of the NORDO library
+ */
+
+/**
  * Creates a new NORDO instance
- * @returns {Object} A NORDO instance
+ * @returns {NordoInstance} A NORDO instance
+ * @example
+ * const nordo = createNordo();
+ * console.log(nordo.version); // "1.0.0"
  */
 export function createNordo() {
   return {
