@@ -7,13 +7,13 @@
  * @module nordo
  */
 
-import { version } from '../package.json' with { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 
 /**
  * The version of the NORDO library
  * @type {string}
  */
-export const VERSION = version;
+export const VERSION = pkg.version;
 
 /**
  * @typedef {Object} Outbox
