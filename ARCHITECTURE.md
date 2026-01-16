@@ -2,24 +2,38 @@
 
 Log of architectural decisions for Nordo.
 
-## ADR-001: No bundler, just copy files
+<!-- ADRs are listed in reverse chronological order (newest first) -->
 
-**Decision:** Use a simple Node.js script to copy `.js` files from `src/` to `dist/` instead of using Rollup, esbuild, or Vite.
+## ADR-002: ES2022 target baseline
 
-**Context:** This is a browser-focused library with no external dependencies and no need for transpilation. Modern browsers support ES modules natively.
+**Decision:** Target ES2022 as the minimum JavaScript version for output.
 
-**Rationale:** As of this writing, a bundler would add complexity without providing value right now. We're following the "bundle only when necessary" approach that's become standard (see Vite's unbundled dev mode, Snowpack). The entire build is just copying files.
+**Context:** We need to decide how "modern" the distributed code should be.
+
+**Rationale:** ES2022 is fully supported by all browsers updated since late 2021 (Chrome 94+, Firefox 93+, Safari 15+, Edge 94+). This covers the vast majority of active users and likely offers all the stable API we need to support the outbox strategies. This can be revisited later.
+
+## ADR-001: tsup for build tooling
+
+**Decision:** Use tsup to bundle the library for distribution.
+
+**Context:** This is a browser-focused ES module library. A focused toolchain is the preference and TSUp arguably loses some focus with a currently unnecessary typescript dependency, but it anticipates things we might reasonably want in early development.
+
+**Rationale:** tsup provides sensible defaults for library authors with minimal config.
+
+**Configuration highlights:**
+- `format: ['esm']` — ES Modules only (no CommonJS)
+- `platform: 'browser'` — Optimized for browser, not Node
 
 ## Future Considerations
 
-If the project needs any of these, it's time to add a proper bundler:
-- External npm dependencies to bundle
-- Minification for production
-- TypeScript compilation  
-- Tree-shaking for optimization
-- Dual package (ESM + CJS) distribution
+If the project needs any of these, tsup can accommodate with minor config changes:
+- Minification → Add `minify: true`
+- TypeScript compilation → Just rename files to `.ts`
+- Tree-shaking → Support noted in documentation, seems like a default behavior.
 
 ## References
 
-- [Vite Philosophy](https://vitejs.dev/guide/why.html) - Unbundled dev approach
+- [Vite Philosophy](https://vitejs.dev/guide/why.html)
+- [tsup documentation](https://tsup.egoist.dev/)
+- [esbuild documentation](https://esbuild.github.io/)
 - [ESM best practices](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) - Sindre Sorhus guidance

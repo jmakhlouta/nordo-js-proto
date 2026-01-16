@@ -12,14 +12,14 @@ This is a modern JS library designed for use in the browser. It embraces a vanil
 
 ```
 nordo-js-proto/
-├── src/              # Source code (ES modules)
-├── test/             # Test files
-├── dist/             # Built output (generated)
-├── ARCHITECTURE.md   # Build and distribution decisions
-├── package.json      # Project configuration
-├── vitest.config.js  # Test configuration
-├── eslint.config.js  # Linting configuration
-└── build.js          # Simple build script
+├── src/ # Source code (ES modules)
+├── test/ # Test files
+├── dist/ # Built output (generated)
+├── ARCHITECTURE.md # Build and distribution decisions
+├── package.json # Project configuration
+├── tsup.config.js # Build configuration
+├── vitest.config.js # Test configuration
+└── eslint.config.js # Linting configuration
 ```
 
 ## Installation
@@ -34,7 +34,7 @@ npm install
 ```bash
 npm test              # Run tests once
 npm run test:watch    # Run tests in watch mode
-npm run build         # Build ES modules to dist/
+npm run build         # Build ES module(s) to dist/
 npm run lint          # Check code quality
 ```
 

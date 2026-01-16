@@ -1,7 +1,7 @@
 {
   "name": "nordo-js-proto",
-  "version": "1.0.0",
-  "description": "Endeavors to be a well-factored outbox for streamable change events (sometimes called domain intents). Specifically Not Overly Reliable (or) Durable Outbox—NORDO",
+  "version": "0.1.0",
+  "description": "Nordo is the Not Overly Reliable nor Durable Outbox—a browser-based event queue that prioritizes simplicity over guarantees.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -17,7 +17,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "node build.js",
+    "build": "tsup",
     "lint": "eslint src"
   },
   "keywords": [
@@ -32,6 +32,8 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.17"
   }
 }
