@@ -1,12 +1,12 @@
 # nordo-js-proto
 
-Endeavors to be a well-factored outbox for streamable change events (sometimes called domain intents). Specifically Not Overly Reliable (or) Durable Outbox—NORDO
+Nordo is the Not Overly Reliable nor Durable Outbox—a browser-based event queue that prioritizes simplicity over guarantees. When your web app ships user intents or change events (instead of capturing-and-sending state), solutions tend to converge on an outbox pattern. But this is usually treated as either a framework concern or part of a larger state management strategy. Nordo is a standalone library with opinions about structure and delivery, so you can focus on your users' activity instead of envelopes, queue management, acks, and streaming.
 
 ## About This Project
 
-This is a modern vanilla JavaScript library designed for browser use, following ES module standards. It embraces the **vanilla-js-ethos** with a simple, unbundled approach that aligns with 2024-2025 best practices.
+This is a modern JS library designed for use in the browser. It embraces a vanilla JS ethos and aims to have a narrow scope that can afford it a flat dependencies graph with few runtime dependencies.
 
-📐 **See [ARCHITECTURE.md](./ARCHITECTURE.md)** for detailed information about build decisions, distribution strategy, and when/why to add complexity.
+📐 **See [ARCHITECTURE.md](./ARCHITECTURE.md)** for detailed information about design and architectural decisions.
 
 ## Project Structure
 
@@ -30,19 +30,11 @@ npm install
 
 ## Development
 
-### Run Tests
+### Useful Scripts
 ```bash
 npm test              # Run tests once
 npm run test:watch    # Run tests in watch mode
-```
-
-### Build
-```bash
 npm run build         # Build ES modules to dist/
-```
-
-### Lint
-```bash
 npm run lint          # Check code quality
 ```
 
@@ -50,26 +42,15 @@ npm run lint          # Check code quality
 
 This is a proof-of-concept library with a stubbed-out API. The actual outbox implementation will have nuanced specifications added later.
 
-```javascript
-import { createOutbox } from 'nordo-js-proto';
-
-const outbox = createOutbox();
-console.log(outbox.version);
-```
-
 ## Browser Usage
 
 Since this targets ES modules for the browser, you can use it directly:
 
 ```html
 <script type="module">
-  import { createOutbox } from './dist/index.js';
+  import { createOutbox } from 'nordo';
   
   const outbox = createOutbox();
   console.log('Outbox initialized:', outbox);
 </script>
 ```
-
-## License
-
-ISC
