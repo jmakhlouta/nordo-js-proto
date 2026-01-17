@@ -41,15 +41,17 @@ npm run lint          # Check code quality
 
 ### Dev Samples
 
-For interactive manual testing and development, check out the dev samples:
+For debugging and manual testing during development:
 
-📚 **See [dev/samples/README.md](./dev/samples/README.md)** for interactive development samples.
+📚 **See [dev/samples/README.md](./dev/samples/README.md)** for development harness scripts.
 
 Quick start:
 ```bash
-npm run build                    # Build the library first
-npx http-server -p 8000          # Start local server
-# Open: http://localhost:8000/dev/samples/basic-usage/
+# Run a dev sample
+node dev/samples/basic-usage.js
+
+# Run with debugger attached
+node --inspect dev/samples/basic-usage.js
 ```
 
 ## Usage

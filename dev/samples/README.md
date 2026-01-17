@@ -4,89 +4,93 @@ This directory contains simple local development harnesses used exclusively for 
 
 ## Purpose
 
-Dev samples are lightweight, standalone examples that demonstrate how to use Nordo in real scenarios. They serve as:
+Dev samples are lightweight, standalone Node.js scripts that allow developers to quickly get a debugger around the top-level nordo namespace. They serve as:
 
-- **Manual testing harnesses** for developers working on the library
+- **Debugging harnesses** for developers working on the library
 - **Quick validation tools** to verify changes work as expected
-- **Interactive examples** for exploring library behavior
-- **Development aids** for debugging and experimentation
+- **Interactive runtimes** for exploring library behavior with a debugger attached
+- **Development aids** for experimentation and testing
 
 ## Structure
 
-Each sample lives in its own subdirectory under `dev/samples/`:
+Each sample is a simple Node.js script under `dev/samples/`:
 
 ```
 dev/samples/
-├── basic-usage/     # Simple example demonstrating core API
-│   └── index.html
+├── basic-usage.js   # Simple script demonstrating core API
 └── README.md        # This file
 ```
 
 ## Usage
 
-Dev samples are designed to be run directly in a browser. Since Nordo is built as an ES module for the browser, you can serve these samples using any local HTTP server.
+Dev samples are simple Node.js scripts that import directly from the source code. You can run them with or without a debugger attached.
 
-### Option 1: Using Python (if installed)
+### Basic Execution
 
 ```bash
 # From the repository root
-python3 -m http.server 8000
-
-# Then open: http://localhost:8000/dev/samples/basic-usage/
+node dev/samples/basic-usage.js
 ```
 
-### Option 2: Using Node.js http-server
+### With Debugger
 
 ```bash
-# Install http-server globally (one-time setup)
-npm install -g http-server
+# Start with debugger attached (use Chrome DevTools at chrome://inspect)
+node --inspect dev/samples/basic-usage.js
 
-# From the repository root
-http-server -p 8000
-
-# Then open: http://localhost:8000/dev/samples/basic-usage/
+# Start with debugger and break at the first line
+node --inspect-brk dev/samples/basic-usage.js
 ```
 
-### Option 3: Using npx (no installation needed)
+### Using VS Code Debugger
 
-```bash
-# From the repository root
-npx http-server -p 8000
+Add a launch configuration to `.vscode/launch.json`:
 
-# Then open: http://localhost:8000/dev/samples/basic-usage/
+```json
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Debug Dev Sample",
+  "program": "${workspaceFolder}/dev/samples/basic-usage.js",
+  "skipFiles": ["<node_internals>/**"]
+}
 ```
 
 ## Important Notes
 
-1. **Build First**: Always run `npm run build` before testing samples, as they import from the `dist/` directory.
+1. **No Build Required**: Samples import directly from `src/` using ES modules, no build step needed.
 2. **Not Production Code**: These samples are for development only and are not part of the library's distribution.
 3. **Simple and Focused**: Keep samples minimal and focused on specific use cases or features.
-4. **No Dependencies**: Samples should work with just the built library and standard browser APIs.
+4. **Debugger Friendly**: Include `debugger;` statements at key points for easy breakpoints.
 
 ## Adding New Samples
 
 To add a new dev sample:
 
-1. Create a new directory under `dev/samples/` with a descriptive name
-2. Add an `index.html` file (or other entry point)
-3. Import from the built library: `import { ... } from '../../../dist/index.js'`
+1. Create a new `.js` file under `dev/samples/` with a descriptive name
+2. Add a shebang and descriptive header comment
+3. Import from source: `import nordo from '../../src/index.js'`
 4. Keep it simple and focused on a specific use case
-5. Document the purpose at the top of the sample
+5. Include `debugger;` statements at useful breakpoints
+6. Document usage in the file header
 
 ## Available Samples
 
-### basic-usage
+### basic-usage.js
 
-A simple HTML page demonstrating the core Nordo API:
-- Creating an outbox instance
-- Displaying the library version
-- Interactive browser-based testing
+A simple Node.js script demonstrating the core Nordo API:
+- Imports the nordo namespace
+- Logs version information
+- Creates an outbox instance
+- Includes debugger statement for attaching a debugger
 
-**Location**: `dev/samples/basic-usage/index.html`
+**Location**: `dev/samples/basic-usage.js`
 
 **To run**:
 ```bash
-npm run build
-npx http-server -p 8000
-# Open: http://localhost:8000/dev/samples/basic-usage/
+# Basic execution
+node dev/samples/basic-usage.js
+
+# With debugger
+node --inspect dev/samples/basic-usage.js
 ```
