@@ -4,21 +4,21 @@ Log of architectural decisions for Nordo.
 
 <!-- ADRs are listed in reverse chronological order (newest first) -->
 
-## ADR-002: ES2022 target baseline
+## ADR-001: Source latest; target ES2022 output (2026-01-17)
 
-**Decision:** Target ES2022 as the minimum JavaScript version for output.
+**Decision:** Write and lint source code against the latest ECMAScript (`ecmaVersion: 'latest'`). Build outputs will target ES2022.
 
-**Context:** We need to decide how "modern" the distributed code should be.
+**Rationale:**
+- Allow modern syntax while producing a consistent ES2022 output for distribution.
+- ES2022 provides a reasonable compatibility/feature trade-off for the project's browser-focused targets.
 
-**Rationale:** ES2022 is fully supported by all browsers updated since late 2021 (Chrome 94+, Firefox 93+, Safari 15+, Edge 94+). This covers the vast majority of active users and likely offers all the stable API we need to support the outbox strategies. This can be revisited later.
-
-## ADR-001: tsup for build tooling
+## ADR-002: tsup for build tooling (2025-12-01)
 
 **Decision:** Use tsup to bundle the library for distribution.
 
-**Context:** This is a browser-focused ES module library. A focused toolchain is the preference and TSUp arguably loses some focus with a currently unnecessary typescript dependency, but it anticipates things we might reasonably want in early development.
+**Context:** This is a browser-focused ES module library.
 
-**Rationale:** tsup provides sensible defaults for library authors with minimal config.
+**Rationale:** tsup provides sensible defaults for nordo lib with minimal config.
 
 **Configuration highlights:**
 - `format: ['esm']` — ES Modules only (no CommonJS)
@@ -35,5 +35,4 @@ If the project needs any of these, tsup can accommodate with minor config change
 
 - [Vite Philosophy](https://vitejs.dev/guide/why.html)
 - [tsup documentation](https://tsup.egoist.dev/)
-- [esbuild documentation](https://esbuild.github.io/)
 - [ESM best practices](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) - Sindre Sorhus guidance
