@@ -41,17 +41,10 @@ npm run lint          # Check code quality
 
 ### Dev Samples
 
-For debugging and manual testing during development:
+Quick scripts for debugging and manual testing. See [dev/samples/README.md](./dev/samples/README.md).
 
-📚 **See [dev/samples/README.md](./dev/samples/README.md)** for development harness scripts.
-
-Quick start:
 ```bash
-# Run a dev sample
 node dev/samples/basic-usage.js
-
-# Run with debugger attached
-node --inspect dev/samples/basic-usage.js
 ```
 
 ## Usage
